@@ -1,5 +1,5 @@
 CWD := $(shell pwd)
-TAG := nginx
+TAG := stable
 IMAGE := "jamrizzi/tao:$(TAG)"
 SOME_CONTAINER := $(shell echo some-$(IMAGE) | sed 's/[^a-zA-Z0-9]//g')
 DOCKERFILE := $(CWD)/$(TAG)/Dockerfile
@@ -22,9 +22,13 @@ push:
 	@docker push $(IMAGE)
 	@echo ::: PUSH :::
 
+.PHONY: info
+info:
+	@docker inspect -f '{{.Config.Labels}}' $(IMAGE)
+
 .PHONY: run
 run:
-	@docker run --name run$(SOME_CONTAINER) --rm $(IMAGE)
+	@docker run --name run$(SOME_CONTAINER) --rm -p 8080:8080 $(IMAGE)
 
 .PHONY: ssh
 ssh:
@@ -32,7 +36,7 @@ ssh:
 
 .PHONY: essh
 essh:
-	@docker exec run$(SOME_CONTAINER) /bin/sh
+	@docker exec -it run$(SOME_CONTAINER) /bin/sh
 
 .PHONY: clean
 clean:

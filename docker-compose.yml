@@ -1,0 +1,14 @@
+tao:
+  image: jamrizzi/tao:stable
+  links:
+    - mariadb:database
+  ports:
+    - 8080:8080
+
+mariadb:
+  image: mariadb:latest
+  environment:
+    - MYSQL_RANDOM_ROOT_PASSWORD=true
+    - MYSQL_USER=tao
+    - MYSQL_PASSWORD=hellodocker
+    - MYSQL_DATABASE=tao
