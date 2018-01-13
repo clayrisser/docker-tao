@@ -28,7 +28,7 @@ info:
 
 .PHONY: up
 up:
-	@docker-compose -f $(TAG)/docker-compose.yml up
+	@docker-compose -f $(TAG)/docker-compose.yml up --force-recreate
 
 .PHONY: run
 run:
