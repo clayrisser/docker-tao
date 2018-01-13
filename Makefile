@@ -26,6 +26,10 @@ push:
 info:
 	@docker inspect -f '{{.Config.Labels}}' $(IMAGE)
 
+.PHONY: up
+up:
+	@docker-compose -f $(TAG)/docker-compose.yml up
+
 .PHONY: run
 run:
 	@docker run --name run$(SOME_CONTAINER) --rm -p 8080:8080 $(IMAGE)
