@@ -2,10 +2,12 @@ FROM php:5.6.33-fpm-alpine3.4
 
 ARG tao_version=3.2.0-RC2
 ARG mathjax_version=2.2.0
+ARG envstamp_version=0.2.0
 
 LABEL image=jamrizzi/tao:stable \
       maintainer="Jam Risser <jam@jamrizzi.com> (https://jam.jamrizzi.com)" \
       tao_version=$tao_version \
+      envtamp_version=$envstamp_version \
       mathjax_version=$mathjax_version \
       base=alpine:3.4
 
@@ -22,6 +24,8 @@ RUN docker-php-ext-install \
       opcache \
       zip && \
     mkdir -p /run/nginx
+RUN curl -L -o /usr/local/bin/envstamp https://github.com/jamrizzi/envstamp/releases/download/${envstamp_version}/envstamp && \
+    chmod +x /usr/local/bin/envstamp
 
 WORKDIR /var/www/html
 
@@ -34,7 +38,8 @@ COPY stable /tmp
 
 RUN cd /tmp && \
     curl -L -o mathjax.tar.gz https://github.com/mathjax/MathJax/archive/${mathjax_version}.tar.gz && \
-	  tar --strip-components=1 -xzvf mathjax.tar.gz -C /var/www/html/taoQtiItem/views/js/mathjax -X mathjax_exclude.txt && \
+	  tar --strip-components=1 -xzvf mathjax.tar.gz -C /var/www/html/taoQtiItem/views/js/mathjax -X mathjax-exclude.txt && \
+    rsync -r /tmp/config/ /var/www/html/config && \
     chown -R nobody:nobody /var/www/html && \
     find /var/www/html -type f -exec chmod 644 {} \; && \
     find /var/www/html -type d -exec chmod 777 {} \;
@@ -46,6 +51,14 @@ RUN mv /tmp/entrypoint.sh /usr/local/sbin/entrypoint.sh && \
 
 EXPOSE 8080
 
-ENV TZ=UTC
+ENV DATABASE_HOST=database \
+    DATABASE_NAME=tao \
+    DATABASE_PASSWORD=hellodocker \
+    DATABASE_USER=tao \
+    INSTANCE_NAME=some-instance \
+    OPERATED_BY_NAME="Some Name" \
+    OPERATED_BY_EMAIL=email@example.com \
+    ROOT_URL=http://localhost:8080 \
+    TZ=UTC
 
 ENTRYPOINT ["/bin/sh", "/usr/local/sbin/entrypoint.sh"]
