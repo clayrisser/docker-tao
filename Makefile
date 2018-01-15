@@ -32,15 +32,15 @@ up:
 
 .PHONY: run
 run:
-	@docker run --name run$(SOME_CONTAINER) --rm -p 8080:8080 $(IMAGE)
+	@docker-compose -f $(TAG)/docker-compose.yml run tao
 
 .PHONY: ssh
 ssh:
-	@docker run --name ssh$(SOME_CONTAINER) --rm -it --entrypoint /bin/sh $(IMAGE)
-
-.PHONY: essh
-essh:
-	@docker exec -it run$(SOME_CONTAINER) /bin/sh
+	@export CONTAINER_NAME=$$(docker ps --format '{{.Names}}' | grep -m 1 stable_tao_) && \
+    if [ "$$CONTAINER_NAME" = "" ]; then \
+    docker-compose -f $(TAG)/docker-compose.yml run --entrypoint /bin/sh tao; else \
+    echo "ssh into $$CONTAINER_NAME" && \
+    docker exec -it $$CONTAINER_NAME /bin/sh; fi
 
 .PHONY: clean
 clean:
