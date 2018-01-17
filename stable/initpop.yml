@@ -1,5 +1,49 @@
-- name: boo
-  url: https://google.com
-  config:
-    - fields:
-        q: boom
+name: tao
+url: http://localhost:8080/tao/install/
+networkIdle: 1000
+steps:
+  - iframe: '#mainFrame'
+    description: 'Checking requirements . . .'
+    click: '#submitForm'
+  - iframe: '#mainFrame'
+    description: 'Setting up the server . . .'
+    fields:
+      host_name: ${ROOT_URL:http://localhost:8080}
+      instance_name: ${INSTANCE_NAME:tao}
+      operated_by_name: ${OPERATED_BY_NAME:'JamRizzi Technologies'}
+      operated_by_email: ${OPERATED_BY_EMAIL:email@example.com}
+    click: '#submitForm'
+  - iframe: '#mainFrame'
+    description: 'Setting up the database . . .'
+    fields:
+      database_host: ${DATABASE_HOST:database}
+      database_user: ${DATABASE_USER:tao}
+      database_password: ${DATABASE_PASSWORD:hellodocker}
+      database_named: ${DATABASE_NAME:tao}
+    elements:
+      - query: '#sample_data'
+        checked: ${SAMPLE_DATA:false}
+    click: '#database_overwrite'
+  - iframe: '#mainFrame'
+    click: '#submitForm'
+  - iframe: '#mainFrame'
+    description: 'Setting up the user . . .'
+    fields:
+      superuser_firstname: ${USER_FIRSTNAME:Jam}
+      superuser_lastname: ${USER_LASTNAME:Risser}
+      superuser_email: ${USER_EMAIL:email@example.com}
+      superuser_login: ${USER_USERNAME:admin}
+      superuser_password1: ${USER_PASSWORD:hellodocker}
+      superuser_password2: ${USER_PASSWORD:hellodocker}
+    click: '#submitForm'
+  - iframe: '#mainFrame'
+    description: 'Accepting the license agreement . . .'
+    click:
+      - '#readLicense1'
+      - '#license1-button-accept'
+      - '#readLicense2'
+      - '#license2-button-accept'
+      - '#submitForm'
+  - iframe: '#mainFrame'
+    description: 'Finalizing the installation . . .'
+    click: '#submitForm'

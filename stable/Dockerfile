@@ -15,6 +15,7 @@ LABEL image=jamrizzi/tao:stable \
 
 RUN apk add --no-cache \
       libpng-dev \
+      mysql-client \
       nginx \
       nodejs \
       rsync \
@@ -32,7 +33,6 @@ RUN echo @edge http://nl.alpinelinux.org/alpine/edge/community >> /etc/apk/repos
     apk add --no-cache \
       chromium@edge \
       nss@edge
-
 RUN npm install -g initpop && \
     curl -L -o /usr/local/bin/envstamp \
       https://github.com/jamrizzi/envstamp/releases/download/${envstamp_version}/envstamp && \
@@ -45,17 +45,24 @@ RUN cd /tmp && \
     unzip tao_build.zip && \
     rsync -r TAO_${tao_version}_build/ /var/www/html
 
-COPY stable /tmp
+COPY stable/mathjax-exclude.txt /tmp/mathjax-exclude.txt
+COPY stable/config /tmp/config
 
 RUN cd /tmp && \
     curl -L -o mathjax.tar.gz https://github.com/mathjax/MathJax/archive/${mathjax_version}.tar.gz && \
-	  tar --strip-components=1 -xzvf mathjax.tar.gz -C /var/www/html/taoQtiItem/views/js/mathjax -X mathjax-exclude.txt && \
+	  tar --strip-components=1 -xzvf mathjax.tar.gz \
+      -C /var/www/html/taoQtiItem/views/js/mathjax \
+      -X mathjax-exclude.txt && \
     mv /tmp/config/ /var/www/html/_config && \
     chown -R nobody:nobody /var/www/html && \
     find /var/www/html -type f -exec chmod 644 {} \; && \
     find /var/www/html -type d -exec chmod 777 {} \;
 
+COPY stable /tmp
+
 RUN mv /tmp/entrypoint.sh /usr/local/sbin/entrypoint.sh && \
+    mv /tmp/initpop.sh /usr/local/sbin/initpop.sh && \
+    chmod -R +x /usr/local/sbin && \
     mv /tmp/supervisord.conf /etc/supervisord.conf && \
     mv /tmp/nginx.conf /etc/nginx/nginx.conf && \
     mv /tmp/initpop.yml /etc/initpop.yml && \
@@ -67,10 +74,17 @@ ENV DATABASE_HOST=database \
     DATABASE_NAME=tao \
     DATABASE_PASSWORD=hellodocker \
     DATABASE_USER=tao \
-    INSTANCE_NAME=some-instance \
-    OPERATED_BY_NAME="Some Name" \
+    INSTANCE_NAME=tao \
+    OPERATED_BY_NAME="JamRizzi Technologies" \
     OPERATED_BY_EMAIL=email@example.com \
     ROOT_URL=http://localhost:8080 \
+    SAMPLE_DATA=false \
+    USER_FIRSTNAME=Jam \
+    USER_LASTNAME=Risser \
+    USER_EMAIL=email@example.com \
+    USER_USERNAME=admin \
+    USER_PASSWORD=hellodocker \
+    USER_PASSWORD=hellodocker \
     MANUEL_SETUP=false \
     TZ=UTC
 
