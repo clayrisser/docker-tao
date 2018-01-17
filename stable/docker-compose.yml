@@ -7,6 +7,8 @@ services:
       - mariadb:database
     ports:
       - 8080:8080
+    environment:
+      - UI_SETUP=true
 
   mariadb:
     image: mariadb:latest

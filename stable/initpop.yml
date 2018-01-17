@@ -1,0 +1,5 @@
+- name: boo
+  url: https://google.com
+  config:
+    - fields:
+        q: boom
