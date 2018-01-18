@@ -1,5 +1,5 @@
 name: tao
-url: http://localhost:8080/tao/install/
+url: http://localhost/tao/install/
 networkIdle: 1000
 steps:
   - iframe: '#mainFrame'
@@ -8,7 +8,7 @@ steps:
   - iframe: '#mainFrame'
     description: 'Setting up the server . . .'
     fields:
-      host_name: ${ROOT_URL:http://localhost:8080}
+      host_name: ${ROOT_URL:http://localhost}
       instance_name: ${INSTANCE_NAME:tao}
       operated_by_name: ${OPERATED_BY_NAME:'JamRizzi Technologies'}
       operated_by_email: ${OPERATED_BY_EMAIL:email@example.com}
