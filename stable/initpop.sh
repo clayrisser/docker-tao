@@ -8,9 +8,10 @@ else
       sleep 5
     done
     initpop /etc/initpop.yml
+  else
+    rm -r /var/www/html/config
+    mv /var/www/html/_config /var/www/html/config
+    envstamp /var/www/html/config
   fi
-  rm -r /var/www/html/config
-  mv /var/www/html/_config /var/www/html/config
-  envstamp /var/www/html/config
   echo "Tao is ready at $ROOT_URL"
 fi
