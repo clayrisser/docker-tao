@@ -36,7 +36,7 @@ define('LOCAL_NAMESPACE','${ROOT_URL}/${INSTANCE_NAME}.rdf');
 
 # platform identification
 define('GENERIS_INSTANCE_NAME','${INSTANCE_NAME}');
-define('GENERIS_SESSION_NAME','tao_4TdvpKAn');
+define('GENERIS_SESSION_NAME','tao_12345678');
 
 # paths
 define('ROOT_PATH','/var/www/html/');
@@ -56,7 +56,7 @@ define('DEBUG_MODE', false);
 define('SYS_READY', true);
 
 #the time zone, required since PHP5.3
-define('TIME_ZONE','UTC');
+define('TIME_ZONE','${TZ:UTC}');
 
 # Passsword Hash Preferences
 define('PASSWORD_HASH_ALGORITHM', 'sha256');

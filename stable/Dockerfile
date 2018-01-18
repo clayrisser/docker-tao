@@ -32,8 +32,8 @@ RUN echo @edge http://nl.alpinelinux.org/alpine/edge/community >> /etc/apk/repos
     echo @edge http://nl.alpinelinux.org/alpine/edge/main >> /etc/apk/repositories && \
     apk add --no-cache \
       chromium@edge \
-      nss@edge
-RUN npm install -g initpop && \
+      nss@edge && \
+    npm install -g initpop && \
     curl -L -o /usr/local/bin/envstamp \
       https://github.com/jamrizzi/envstamp/releases/download/${envstamp_version}/envstamp && \
     chmod +x /usr/local/bin/envstamp
@@ -43,17 +43,22 @@ WORKDIR /var/www/html
 RUN cd /tmp && \
     curl -L -o tao_build.zip http://releases.taotesting.com/TAO_${tao_version}_build.zip && \
     unzip tao_build.zip && \
-    rsync -r TAO_${tao_version}_build/ /var/www/html
+    rsync -r TAO_${tao_version}_build/ /var/www/html && \
+    sed -i -e "s/return 'tao_' . helpers_Random::generateString(8);/return 'tao_12345678';/g" \
+      /var/www/html/tao/install/class.Installator.php
 
 COPY stable/mathjax-exclude.txt /tmp/mathjax-exclude.txt
 COPY stable/config /tmp/config
+COPY stable/locales /tmp/locales
 
 RUN cd /tmp && \
     curl -L -o mathjax.tar.gz https://github.com/mathjax/MathJax/archive/${mathjax_version}.tar.gz && \
 	  tar --strip-components=1 -xzvf mathjax.tar.gz \
       -C /var/www/html/taoQtiItem/views/js/mathjax \
       -X mathjax-exclude.txt && \
-    mv /tmp/config/ /var/www/html/_config && \
+    mv /tmp/config /var/www/html/_config && \
+    rm -r /var/www/html/tao/views/locales && \
+    mv /tmp/locales /var/www/html/tao/views/locales && \
     chown -R nobody:nobody /var/www/html && \
     find /var/www/html -type f -exec chmod 644 {} \; && \
     find /var/www/html -type d -exec chmod 777 {} \;
@@ -62,10 +67,10 @@ COPY stable /tmp
 
 RUN mv /tmp/entrypoint.sh /usr/local/sbin/entrypoint.sh && \
     mv /tmp/initpop.sh /usr/local/sbin/initpop.sh && \
-    chmod -R +x /usr/local/sbin && \
     mv /tmp/supervisord.conf /etc/supervisord.conf && \
     mv /tmp/nginx.conf /etc/nginx/nginx.conf && \
     mv /tmp/initpop.yml /etc/initpop.yml && \
+    chmod -R +x /usr/local/sbin && \
     rm -rf /tmp/* /tmp/.* &>/dev/null || true
 
 EXPOSE 8080
