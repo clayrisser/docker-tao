@@ -1,6 +1,6 @@
 name: tao
 url: http://localhost/tao/install/
-networkIdle: 1000
+networkIdle: 5000
 steps:
   - iframe: '#mainFrame'
     description: 'Checking requirements . . .'

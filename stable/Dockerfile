@@ -4,7 +4,8 @@ ARG tao_version=3.2.0-RC2
 ARG mathjax_version=2.2.0
 ARG envstamp_version=0.2.0
 
-ENV CHROME_BIN=/usr/bin/chromium-browser
+ENV CHROME_BIN=/usr/bin/chromium-browser \
+    PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
 LABEL image=jamrizzi/tao:stable \
       maintainer="Jam Risser <jam@jamrizzi.com> (https://jam.jamrizzi.com)" \
