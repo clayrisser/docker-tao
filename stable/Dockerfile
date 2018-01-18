@@ -74,7 +74,7 @@ RUN mv /tmp/entrypoint.sh /usr/local/sbin/entrypoint.sh && \
     chmod -R +x /usr/local/sbin && \
     rm -rf /tmp/* /tmp/.* &>/dev/null || true
 
-EXPOSE 80
+EXPOSE 8080
 
 ENV DATABASE_HOST=database \
     DATABASE_NAME=tao \
@@ -83,7 +83,7 @@ ENV DATABASE_HOST=database \
     INSTANCE_NAME=tao \
     OPERATED_BY_NAME="JamRizzi Technologies" \
     OPERATED_BY_EMAIL=email@example.com \
-    ROOT_URL=http://localhost \
+    ROOT_URL=http://localhost:8080 \
     SAMPLE_DATA=false \
     USER_FIRSTNAME=Jam \
     USER_LASTNAME=Risser \
