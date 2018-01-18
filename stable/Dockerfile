@@ -89,7 +89,6 @@ ENV DATABASE_HOST=database \
     USER_EMAIL=email@example.com \
     USER_USERNAME=admin \
     USER_PASSWORD=hellodocker \
-    USER_PASSWORD=hellodocker \
     MANUEL_SETUP=false \
     TZ=UTC
 
